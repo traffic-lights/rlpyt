@@ -93,6 +93,8 @@ class AsyncRlBase(BaseRunner):
             traj_infos = drain_queue(self.traj_infos_queue, n_sentinel=1)
             self.store_diagnostics(0, 0, traj_infos, ())
             self.log_diagnostics(0, 0, 0)
+
+
         log_counter = 0
         while True:  # Run until sampler hits n_steps and sets ctrl.quit=True.
             logger.set_iteration(itr)
@@ -387,10 +389,17 @@ class AsyncRlBase(BaseRunner):
         if traj_infos is None:
             traj_infos = self._traj_infos
         if traj_infos:
-            for k in traj_infos[0]:
+            keys = set()
+            for info in traj_infos:
+                for k in info:
+                    keys.add(k)
+
+            for k in keys:
                 if not k.startswith("_"):
-                    logger.record_tabular_misc_stat(k,
-                        [info[k] for info in traj_infos])
+                    logger.record_tabular_misc_stat(
+                        k,
+                        [info[k] for info in traj_infos if k in info]
+                    )
 
         if self._opt_infos:
             for k, v in self._opt_infos.items():
