@@ -193,7 +193,7 @@ class DQN(RlAlgorithm):
         return SamplesToBuffer(
             observation=examples["observation"],
             action=examples["action"],
-            reward=examples["reward"],
+            reward=examples["env_info"].reward,
             done=examples["done"],
         )
 
@@ -204,7 +204,7 @@ class DQN(RlAlgorithm):
         return SamplesToBuffer(
             observation=samples.env.observation,
             action=samples.agent.action,
-            reward=samples.env.reward,
+            reward=samples.env.env_info.reward,
             done=samples.env.done,
         )
 

@@ -1,5 +1,6 @@
 
 import numpy as np
+from gym.spaces import MultiDiscrete
 from gym.spaces.dict import Dict as GymDict
 from collections import namedtuple
 
@@ -113,6 +114,8 @@ class GymSpaceWrapper:
 
     @property
     def n(self):
+        if isinstance(self.space, MultiDiscrete):
+            return self.space.nvec[0]
         return self.space.n
 
     def seed(self, seed=None):
